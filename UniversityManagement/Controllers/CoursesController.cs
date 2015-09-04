@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using UniversityManagement.Migrations;
 using UniversityManagement.Models;
 
@@ -33,15 +34,18 @@ namespace UniversityManagement.Controllers
             {
                 return HttpNotFound();
             }
+        ViewBag.DeptName=FindaCourseObjNameByid(course.DepartmentId);
             return View(course);
         }
 
         // GET: Courses/Create
         public ActionResult Create()
         {
-            var list = from d in db.Departments
-                orderby d.DepartmentName
-                select d.DepartmentName;
+            //var list = from d in db.Departments
+            //    orderby d.DepartmentName
+            //    select d.DepartmentName;
+
+            var list = CreateListOfDepertmentName();
             ViewBag.DepartmentId = new SelectList(list);
 
             return View();
@@ -70,10 +74,12 @@ namespace UniversityManagement.Controllers
             course.Credit = Credit;
             course.Name = Name;
             course.Description = Description;
-            var depId =( from id in db.Departments
-                where id.DepartmentName == DepartmentId
-                select id).Take(1);
-            course.DepartmentId =Convert.ToInt32(depId.FirstOrDefault().DepartmentId);
+            //var depId =( from id in db.Departments
+            //    where id.DepartmentName == DepartmentId
+            //    select id).Take(1);
+            //course.DepartmentId =Convert.ToInt32(depId.FirstOrDefault().DepartmentId);
+            var myid = FindaCourseObjIdByName(DepartmentId);
+            course.DepartmentId = myid;
             course.SemesterId = int.Parse(SemesterId);
 
             if (ModelState.IsValid)
@@ -89,6 +95,8 @@ namespace UniversityManagement.Controllers
         // GET: Courses/Edit/5
         public ActionResult Edit(int? id)
         {
+            var list = CreateListOfDepertmentName();
+            ViewBag.DepartmentId = new SelectList(list);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -106,8 +114,34 @@ namespace UniversityManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CourseId,Code,Credit,Name,Description,DepartmentId,SemesterId")] Course course)
+        //public ActionResult Edit([Bind(Include = "CourseId,Code,Credit,Name,Description,DepartmentId,SemesterId")] Course course)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(course).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(course);
+        //}
+        public ActionResult Edit (int CourseId ,string Code, double Credit, string Name, string Description, string DepartmentId, string SemesterId)
         {
+            Course course=new Course();
+            course.Code = Code;
+            course.Credit = Credit;
+            course.Name = Name;
+            course.Description = Description;
+            int cId = Convert.ToInt32((string)ViewBag.Editid);
+            //var depId =( from id in db.Departments
+            //    where id.DepartmentName == DepartmentId
+            //    select id).Take(1);
+            //course.DepartmentId =Convert.ToInt32(depId.FirstOrDefault().DepartmentId);
+            course.CourseId = CourseId;
+           
+            var myid = FindaCourseObjIdByName(DepartmentId);
+            course.DepartmentId = myid;
+            course.SemesterId = int.Parse(SemesterId);
+
             if (ModelState.IsValid)
             {
                 db.Entry(course).State = EntityState.Modified;
@@ -116,7 +150,6 @@ namespace UniversityManagement.Controllers
             }
             return View(course);
         }
-
         // GET: Courses/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -125,10 +158,13 @@ namespace UniversityManagement.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Course course = db.Courses.Find(id);
+
             if (course == null)
             {
                 return HttpNotFound();
             }
+
+            ViewBag.DeleteCourseName = FindaCourseObjNameByid(id);
             return View(course);
         }
 
@@ -151,5 +187,37 @@ namespace UniversityManagement.Controllers
             }
             base.Dispose(disposing);
         }
+
+        private string []CreateListOfDepertmentName()
+        {
+            var list = from d in db.Departments
+                       orderby d.DepartmentName
+                       select d.DepartmentName;
+
+            return list.ToArray();
+
+        }
+
+        private int  FindaCourseObjIdByName(string DepartmentId)
+        {
+            var depId = (from id in db.Departments
+                         where id.DepartmentName == DepartmentId
+                         select id).Take(1);
+
+            int findoj  = Convert.ToInt32(depId.FirstOrDefault().DepartmentId);
+            return findoj;
+        }
+        public string FindaCourseObjNameByid (int? DepartmentId)
+        {
+            var depId = (from id in db.Departments
+                         where id.DepartmentId == DepartmentId
+                         select id).Take(1);
+
+            string findoj = depId.FirstOrDefault().DepartmentName;
+            return findoj;
+        }
+
+
+
     }
 }

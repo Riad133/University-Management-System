@@ -47,7 +47,10 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DepartmentId)
+            @*1
+            @Html.DisplayFor(model => ViewBag.DeptName)*@
+
+            @Html.Raw((String)ViewBag.DeptName)
         </dd>
 
         <dt>

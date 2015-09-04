@@ -48,7 +48,10 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DepartmentId)
+
+            @*@Html.DisplayFor(model => model.DepartmentId)*@
+
+            @Html.Raw((string)ViewBag.DeleteCourseName)
         </dd>
 
         <dt>

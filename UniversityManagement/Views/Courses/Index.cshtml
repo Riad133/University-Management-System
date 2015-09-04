@@ -1,4 +1,5 @@
-﻿@model IEnumerable<UniversityManagement.Models.Course>
+﻿@using UniversityManagement.Controllers
+@model IEnumerable<UniversityManagement.Models.Course>
 
 @{
     ViewBag.Title = "Index";
@@ -47,7 +48,14 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DepartmentId)
+            @*@Html.DisplayFor(modelItem => item.DepartmentId)*@
+            @{
+                var c = new CoursesController();
+                string name = c.FindaCourseObjNameByid(item.DepartmentId);
+                
+                @Html.Raw(name);
+              
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.SemesterId)

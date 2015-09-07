@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UniversityManagement.Models
 {
-    public class Teacher
+    public class Teachers
     {
         [Key]
         public int TeacherId { get; set; }
@@ -25,9 +25,6 @@ namespace UniversityManagement.Models
         public string Designation { get; set; }
         public int DepartmentId { get; set; }
         [Required(ErrorMessage = "You Must Fill Course Credit Field")]
-        public decimal Credit  { get; set; }
-
-
-       
+        public decimal Credit { get; set; }
     }
 }

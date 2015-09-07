@@ -9,7 +9,7 @@ namespace UniversityManagement.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(UniversityManagement.Models.DBContext context)
@@ -26,6 +26,17 @@ namespace UniversityManagement.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            context.Teachers.AddOrUpdate(x=> x.Designation,
+                new Models.Teacher{ Designation  ="Lecturer"},
+                new Models.Teacher{ Designation  ="assistant professor"},
+                new Models.Teacher{ Designation  ="associate professor"},
+                new Models.Teacher{ Designation  ="professor"}
+
+
+
+
+            )
         }
     }
 }

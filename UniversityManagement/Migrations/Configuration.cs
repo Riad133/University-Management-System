@@ -27,16 +27,16 @@ namespace UniversityManagement.Migrations
             //    );
             //
 
-            context.Teachers.AddOrUpdate(x=> x.Designation,
-                new Models.Teacher{ Designation  ="Lecturer"},
-                new Models.Teacher{ Designation  ="assistant professor"},
-                new Models.Teacher{ Designation  ="associate professor"},
-                new Models.Teacher{ Designation  ="professor"}
+            context.Teachers.AddOrUpdate(x => x.Designation,
+                new Models.Teacher {Designation = "Lecturer"},
+                new Models.Teacher {Designation = "assistant professor"},
+                new Models.Teacher {Designation = "associate professor"},
+                new Models.Teacher {Designation = "professor"}
 
 
 
 
-            )
+                );
         }
     }
 }

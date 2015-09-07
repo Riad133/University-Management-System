@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using UniversityManagement.Models;
 
@@ -38,6 +40,12 @@ namespace UniversityManagement.Controllers
         // GET: Teachers/Create
         public ActionResult Create()
         {
+
+            
+            var desinationlist = GetDesination();
+
+            ViewBag.Desinationlist =new  SelectList(desinationlist);
+
             return View();
         }
 
@@ -48,6 +56,8 @@ namespace UniversityManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TeacherId,Name,Address,Email,ContactNo,Designation,DepartmentId,Credit")] Teacher teacher)
         {
+
+
             if (ModelState.IsValid)
             {
                 db.Teachers.Add(teacher);
@@ -123,5 +133,30 @@ namespace UniversityManagement.Controllers
             }
             base.Dispose(disposing);
         }
+      public string [] GetDesination()
+{
+           List<string> list=new List<string>();
+
+          string conString = WebConfigurationManager.ConnectionStrings["universityDBContext"].ConnectionString;
+           SqlConnection conn =new SqlConnection(conString);
+       
+
+        conn.Open();
+          SqlCommand cmd=new SqlCommand();
+        cmd.CommandText = "SELECT *  FROM Designation";
+          cmd.Connection = conn;
+          SqlDataReader reader = cmd.ExecuteReader();
+        
+            while (reader.Read())
+            {
+                string aDesignation = reader["Designation"].ToString();
+              list.Add(aDesignation);
+            }
+        
+
+    
+
+          return list.ToArray();
+}
     }
 }
